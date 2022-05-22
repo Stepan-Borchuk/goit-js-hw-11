@@ -7,6 +7,3 @@ function fetchCountry(countryName) {
   
 
 export default { fetchCountry };
-
-//   fetch(`https://restcountries.com/v3.1/name/${countryName}?fields=name,capital,population,flags,languages`)
-//         .then(responce => { return responce.json() })
