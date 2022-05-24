@@ -48,27 +48,26 @@ function createCountryList(countries) {
 }
 
 function createCountryCard(countries) {    
-        clearCountryCard();
-        const card = `
-                <p> Capital: ${countries[0].capital} </p>
-                <p> Population: ${countries[0].population} </p>
-                <p> Languages: ${Object.values(countries[0].languages)} </p>`            
-        refs.card.innerHTML = card;
+    clearCountryCard();
+    const card = `
+            <p> Capital: ${countries[0].capital} </p>
+            <p> Population: ${countries[0].population} </p>
+            <p> Languages: ${Object.values(countries[0].languages)} </p>`            
+    refs.card.innerHTML = card;
 }
 
-function ifCardsSoMore(countries) { 
-            clearCountryList();
-            Notify.info('Too many matches found. Please enter a more specific name.');             
+function ifCardsSoMore() { 
+    clearCountryList();
+    Notify.info('Too many matches found. Please enter a more specific name.');             
 }
 
 function renderResult(countries) {
     if (countries.length > 10) {
         ifCardsSoMore(countries)
-    }
-    if (countries.length >= 2 && countries.length <= 20) {
-        createCountryList(countries);
-       
-    }
+    };
+    if (countries.length >= 2 && countries.length <= 10) {
+        createCountryList(countries);  
+    };
     if (countries.length === 1) {
         createCountryList(countries);
         createCountryCard(countries)
@@ -77,9 +76,9 @@ function renderResult(countries) {
 }
 
 function errorFunc() {
-      clearCountryList()
-            clearCountryCard();
-            Notify.failure('Oops, there is no country with that name')
+    clearCountryList()
+    clearCountryCard();
+    Notify.failure('Oops, there is no country with that name')
 }
 
 function fetchCounry(countryName) {
