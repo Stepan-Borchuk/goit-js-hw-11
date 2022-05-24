@@ -47,33 +47,41 @@ function createCountryList(countries) {
             refs.list.innerHTML = markup;
 }
 
-function createCountryCard(countries) {
-    if (countries.length === 1) {
+function createCountryCard(countries) {    
         clearCountryCard();
-
         const card = `
                 <p> Capital: ${countries[0].capital} </p>
                 <p> Population: ${countries[0].population} </p>
-                <p> Languages: ${Object.values(countries[0].languages)} </p>`
-            
+                <p> Languages: ${Object.values(countries[0].languages)} </p>`            
         refs.card.innerHTML = card;
-    }
 }
 
-function ifCardsSoMore(countries) {
-      if (countries.length >= 20) {
+function ifCardsSoMore(countries) { 
             clearCountryList();
-            Notify.info('Too many matches found. Please enter a more specific name.');
-             } else {
-               createCountryList(countries)
-            createCountryCard(countries)  
-            }
+            Notify.info('Too many matches found. Please enter a more specific name.');             
+}
+
+function renderResult(countries) {
+    if (countries.length > 10) {
+        ifCardsSoMore(countries)
+    }
+    if (countries.length >= 2 && countries.length <= 20) {
+        createCountryList(countries);
+       
+    }
+    if (countries.length === 1) {
+        createCountryList(countries);
+        createCountryCard(countries)
+    }
+
+}
+
+function errorFunc() {
+      clearCountryList()
+            clearCountryCard();
+            Notify.failure('Oops, there is no country with that name')
 }
 
 function fetchCounry(countryName) {
-    API.fetchCountry(countryName).then(ifCardsSoMore).catch(error => {
-            clearCountryList()
-            clearCountryCard();
-            Notify.failure('Oops, there is no country with that name')
-        }) 
+    API.fetchCountry(countryName).then(renderResult).catch(errorFunc) 
 }
