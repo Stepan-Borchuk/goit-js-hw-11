@@ -1,22 +1,22 @@
 {
-  "name": "goit-js-hw-10",
+  "name": "goit-js-hw-11",
   "version": "1.1.0",
   "description": "",
   "main": "index.js",
-  "homepage": "https://stepan-borchuk.github.io/goit-js-hw-10",
+  "homepage": "https://stepan-borchuk.github.io/goit-js-hw-11",
   "scripts": {
     "dev": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /goit-js-hw-10"
+    "build": "parcel build src/*.html --public-url /goit-js-hw-11"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Stepan-Borchuk/goit-js-hw-10.git"
+    "url": "git+https://github.com/Stepan-Borchuk/goit-js-hw-11.git"
   },
   "keywords": [],
   "author": "Stepan Borchuk <sb-if@hotmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Stepan-Borchuk/goit-js-hw-10/issues"
+    "url": "https://github.com/Stepan-Borchuk/goit-js-hw-11/issues"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.5",
@@ -26,7 +26,7 @@
     "sass": "^1.32.8"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8",
+    "axios": "^0.27.2",
     "notiflix": "^3.2.5"
   }
 }

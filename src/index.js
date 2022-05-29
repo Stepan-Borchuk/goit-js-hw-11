@@ -1,86 +1,115 @@
 import './css/styles.css';
 
+import axios from 'axios';
+
 import debounce from 'lodash.debounce';
 
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-import API from './fetchCountry';
+// import API from './fetchCountry';
 
+// findPictures();
 
-const DEBOUNCE_DELAY = 300;
+const form = document.querySelector('form');
+const galleryList = document.querySelector('.gallery');
 
+let query;
 
-const refs = {
-    searchCountry: document.querySelector('input'),
-    list: document.querySelector('.country-list'),
-    card: document.querySelector('.country-info')
-}
-    
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const {
+    elements: { searchQuery },
+  } = e.currentTarget;
+  query = searchQuery.value;
+  findPictures(query);
+  //   console.log(searchQuery.value);
+});
 
-refs.searchCountry.addEventListener('input', debounce((event) => {
-    const countryName = event.target.value.trim()
-    if (countryName !== "") {
-      fetchCounry(countryName)
-    } 
-    
-}, DEBOUNCE_DELAY)) 
+async function findPictures() {
+  try {
+    const response = await axios.get('https://pixabay.com/api/', {
+      params: {
+        key: '27725160-470a636dc677cf333fa2ad496',
+        q: query,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        per_page: 20,
+        page: 1,
+      },
+    });
 
+    //   console.log(response.config.params.page);
+    const page = response.config.params.page;
 
-function clearCountryList() {
-    refs.list.innerHTML = "";
-}
+    const data = response.data;
+    const totalHits = data.totalHits;
+    const hits = data.hits;
+    const galleryList = document.querySelector('.gallery');
+    galleryList.innerHTML = '';
 
-function clearCountryCard() {
-    refs.card.innerHTML = "";
-}
+    console.log(data);
 
-function createCountryList(countries) {
-    clearCountryCard();
-    const markup = countries
-                .map(countries =>            
-                    `<div class="countries__list">
-                        <img width= 100px src=${countries.flags.svg} alt='${countries.name}'>
-                        <h2 class="countries__names">${countries.name.official}</h2>      
-                    </div>`)
-                .join("")
-                
-            refs.list.innerHTML = markup;
-}
-
-function createCountryCard(countries) {    
-    clearCountryCard();
-    const card = `
-            <p> Capital: ${countries[0].capital} </p>
-            <p> Population: ${countries[0].population} </p>
-            <p> Languages: ${Object.values(countries[0].languages)} </p>`            
-    refs.card.innerHTML = card;
-}
-
-function ifCardsSoMore() { 
-    clearCountryList();
-    Notify.info('Too many matches found. Please enter a more specific name.');             
-}
-
-function renderResult(countries) {
-    if (countries.length > 10) {
-        ifCardsSoMore(countries)
-    };
-    if (countries.length >= 2 && countries.length <= 10) {
-        createCountryList(countries);  
-    };
-    if (countries.length === 1) {
-        createCountryList(countries);
-        createCountryCard(countries)
+    if (hits.length !== 0) {
+      renderPictures(hits);
+      addLoadmoreBtn(hits, totalHits, page);
+    } else {
+      Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     }
-
+  } catch (error) {
+    // console.error(error);
+  }
 }
 
-function errorFunc() {
-    clearCountryList()
-    clearCountryCard();
-    Notify.failure('Oops, there is no country with that name')
+function renderPictures(hits) {
+  const renderResult = hits
+    .map(
+      hits =>
+        `   <div class="photo-card">
+              <img src=${hits.webformatURL} alt=${hits.tags} loading="lazy" />
+              <div class="info">
+                <p class="info-item">
+                  <b>Likes</b> ${hits.likes}
+                </p>
+                <p class="info-item">
+                  <b>Views</b> ${hits.views}
+                </p>
+                <p class="info-item">
+                  <b>Comments</b> ${hits.comments}
+                </p>
+                <p class="info-item">
+                  <b>Downloads</b> ${hits.downloads}
+                </p>
+              </div>
+            </div>`,
+    )
+    .join('');
+
+  galleryList.insertAdjacentHTML('beforeend', renderResult);
 }
 
-function fetchCounry(countryName) {
-    API.fetchCountry(countryName).then(renderResult).catch(errorFunc) 
+function addLoadmoreBtn(hits, totalHits, page) {
+  console.log(hits.length * page <= totalHits);
+  if (hits.length * page <= totalHits) {
+    const loadMoreButton = `
+          <button class="load-more" type="button">Load more</button>
+             `;
+    galleryList.insertAdjacentHTML('afterend', loadMoreButton);
+  } else {
+    Notify.failure("We're sorry, but you've reached the end of search results.");
+  }
 }
+
+// async function loadMorePictures(page) {
+//     try {
+//         const response = await axios.get('https://pixabay.com/api/', {
+//         params: {
+//             page += 1
+//         },
+//         });
+
+//         renderPictures(hits);
+//     } catch (error) {
+//         // console.error(error);
+//     }
+// }

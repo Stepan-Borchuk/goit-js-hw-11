@@ -12,14 +12,20 @@ body {
   line-height: 1.5;
 }
 
-#search-box {
+.search-form {
   font: inherit;
   padding: 8px;
-  max-width: 320px;
+  /* max-width: 320px; */
   margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(1, 118, 114);
+  /* width: 1600px; */
+  margin: 0 auto;
+  height: 60px;
 }
 
-.countries__list {
+/* .countries__list {
   display: flex;
   margin-bottom: 20px;
   align-items: center;
@@ -29,4 +35,55 @@ body {
 .countries__names {
   margin-left: 10px;
 
+} */
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 20px;
+  /* margin-right: 50px; */
+}
+
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+img {
+  display: block;
+  width: 350px;
+  height: 250px;
+  object-fit: cover
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.info-item {
+  margin-left: 10px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  margin-top: 20px;
+  margin: 0 auto;
+ 
 }
