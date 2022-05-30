@@ -42,7 +42,7 @@ async function fetchPictures() {
   const page = response.config.params.page;
 
   if (hits.length !== 0) {
-    renderPictures(hits);
+    await renderPictures(hits);
     addLoadmoreBtn(hits, totalHits, page);
     weFound(hits);
 
@@ -52,14 +52,13 @@ async function fetchPictures() {
   }
 }
 
-function renderPictures(hits) {
+async function renderPictures(hits) {
   const renderResult = hits
     .map(
       hits =>
-        // `<a class="photo-card" href='${hits.largeImageURL}'><img src='${hits.webformatURL}' alt = '${hits.tags}'/></a>`,
         `<div class="photo-card">
             <a href=${hits.largeImageURL}>
-                <img src=${hits.webformatURL} alt=${hits.tags} />
+                <img src=${hits.webformatURL} alt=${hits.tags} loading="lazy" />
                 </a>
                 <div class="info">
                 <p class="info-item">
@@ -83,7 +82,6 @@ function renderPictures(hits) {
 }
 
 function addLoadmoreBtn(hits, totalHits, page) {
-  console.log(hits.length * page <= totalHits);
   if (hits.length * page <= totalHits) {
     loadMoreBtn.show();
   } else {
@@ -103,5 +101,4 @@ refs.galleryContainer.addEventListener('click', onClick);
 
 function onClick(evt) {
   evt.preventDefault();
-  console.log(evt.target);
 }

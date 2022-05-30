@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_KEY = '27725160-470a636dc677cf333fa2ad496';
 const BASE_URL = 'https://pixabay.com/api/';
-const PER_PAGE = 50;
+const PER_PAGE = 10;
 
 export default class PicturesApiService {
   constructor() {
@@ -24,7 +24,6 @@ export default class PicturesApiService {
           page: this.page,
         },
       });
-      console.log(response);
 
       this.incrementPage();
       return response;
