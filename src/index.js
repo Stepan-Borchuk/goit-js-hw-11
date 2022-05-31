@@ -24,16 +24,14 @@ loadMoreBtn.refs.button.addEventListener('click', fetchPictures);
 
 function onSearch(e) {
   e.preventDefault();
+  clearGalleryContainer();
+  loadMoreBtn.hide();
   const pattern = /\w{1,}/gi;
-  //   const searchQuery = e.currentTarget.elements.searchQuery.value;
 
   picturesApiService.query = e.currentTarget.elements.searchQuery.value;
 
-  //   console.log(picturesApiService.query.match(pattern));
-
   if (pattern.test(picturesApiService.query)) {
     picturesApiService.resetPage();
-    clearGalleryContainer();
     fetchPictures();
   } else {
     Notify.warning('Please, enter a valid search query.', {
@@ -44,7 +42,6 @@ function onSearch(e) {
 }
 
 async function fetchPictures() {
-  loadMoreBtn.hide();
   const response = await picturesApiService.fetchPictures();
 
   const data = response.data;

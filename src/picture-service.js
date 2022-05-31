@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_KEY = '27725160-470a636dc677cf333fa2ad496';
 const BASE_URL = 'https://pixabay.com/api/';
-const PER_PAGE = 200;
+const PER_PAGE = 40;
 
 export default class PicturesApiService {
   constructor() {
@@ -11,7 +11,6 @@ export default class PicturesApiService {
   }
 
   async fetchPictures() {
-    // console.log('response.data');
     try {
       const response = await axios.get(`${BASE_URL}`, {
         params: {
@@ -30,12 +29,6 @@ export default class PicturesApiService {
     } catch (error) {
       console.error(error);
     }
-
-    // .then(response => response.json())
-    // .then(({ articles }) => {
-    //   this.incrementPage();
-    //   return articles;
-    // });
   }
 
   incrementPage() {
