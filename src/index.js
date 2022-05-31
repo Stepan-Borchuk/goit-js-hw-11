@@ -24,12 +24,23 @@ loadMoreBtn.refs.button.addEventListener('click', fetchPictures);
 
 function onSearch(e) {
   e.preventDefault();
+  const pattern = /\w{1,}/gi;
+  //   const searchQuery = e.currentTarget.elements.searchQuery.value;
 
   picturesApiService.query = e.currentTarget.elements.searchQuery.value;
 
-  picturesApiService.resetPage();
-  clearGalleryContainer();
-  fetchPictures();
+  //   console.log(picturesApiService.query.match(pattern));
+
+  if (pattern.test(picturesApiService.query)) {
+    picturesApiService.resetPage();
+    clearGalleryContainer();
+    fetchPictures();
+  } else {
+    Notify.warning('Please, enter a valid search query.', {
+      timeout: 3000,
+      position: 'center-center',
+    });
+  }
 }
 
 async function fetchPictures() {
@@ -40,15 +51,19 @@ async function fetchPictures() {
   const totalHits = data.totalHits;
   const hits = data.hits;
   const page = response.config.params.page;
+  const perPage = response.config.params.per_page;
 
   if (hits.length !== 0) {
     await renderPictures(hits);
-    addLoadmoreBtn(hits, totalHits, page);
+    addLoadmoreBtn(hits, totalHits, page, perPage);
     weFound(hits);
 
     gallery.refresh();
   } else {
-    Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    Notify.failure('Sorry, there are no images matching your search query. Please try again.', {
+      timeout: 3000,
+      position: 'center-center',
+    });
   }
 }
 
@@ -81,11 +96,16 @@ async function renderPictures(hits) {
   refs.galleryContainer.insertAdjacentHTML('beforeend', renderResult);
 }
 
-function addLoadmoreBtn(hits, totalHits, page) {
+function addLoadmoreBtn(hits, totalHits, page, perPage) {
   if (hits.length * page <= totalHits) {
     loadMoreBtn.show();
-  } else {
-    Notify.failure("We're sorry, but you've reached the end of search results.");
+  }
+  if (perPage >= totalHits || hits.length * page > totalHits) {
+    loadMoreBtn.hide();
+    Notify.info("We're sorry, but you've reached the end of search results.", {
+      timeout: 3000,
+      position: 'center-center',
+    });
   }
 }
 
@@ -94,7 +114,11 @@ function clearGalleryContainer() {
 }
 
 function weFound(hits) {
-  Notify.success(`Hooray! We found ${hits.length} images.`);
+  Notify.success(`Hooray! We found ${hits.length} images.`, {
+    timeout: 3000,
+    position: 'center-center',
+    opacity: 0.8,
+  });
 }
 
 refs.galleryContainer.addEventListener('click', onClick);
